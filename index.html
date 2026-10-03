@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Professional CV</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts: Inter & Cairo for English and Arabic typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        },
+                        accent: {
+                            500: '#06b6d4',
+                            600: '#0891b2',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Cairo', 'sans-serif'],
+                        arabic: ['Cairo', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.1);
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #6366f1;
+            border-radius: 4px;
+        }
+
+        /* Glassmorphism effects */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .dark .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+        }
+
+        /* Print Stylesheet for flawless PDF output */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+                font-size: 11pt;
+            }
+            .no-print, nav, #theme-toggle, #lang-toggle, .interactive-btn, #contact-form-section, #toast-container {
+                display: none !important;
+            }
+            .print-full-width {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .glass-card {
+                background: none !important;
+                border: none !important;
+                box-shadow: none !important;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+        }
+
+        /* Keyframe Animations */
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+        .animate-pulse-glow {
+            animation: pulseGlow 4s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300 font-sans antialiased min-h-screen flex flex-col justify-between">
+
+    <header class="sticky top-0 z-40 w-full backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-800 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <a href="#about" class="flex items-center gap-2 font-bold text-xl text-brand-600 dark:text-brand-500 hover:opacity-90 transition">
+                <span class="p-1.5 bg-brand-500 text-white rounded-lg"><i class="fa-solid font-mono text-sm">SB</i></span>
+                <span id="nav-brand-name">Shadi Badr</span>
+            </a>
+
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center gap-6 font-medium text-sm text-slate-600 dark:text-slate-300">
+                <a href="#about" class="hover:text-brand-600 dark:hover:text-brand-400 transition" data-i18n="nav_about">About</a>
+                <a href="#skills" class="hover:text-brand-600 dark:hover:text-brand-400 transition" data-i18n="nav_skills">Skills</a>
+                <a href="#experience" class="hover:text-brand-600 dark:hover:text-brand-400 transition" data-i18n="nav_experience">Experience</a>
+                <a href="#projects" class="hover:text-brand-600 dark:hover:text-brand-400 transition" data-i18n="nav_projects">Projects</a>
+                <a href="#education" class="hover:text-brand-600 dark:hover:text-brand-400 transition" data-i18n="nav_education">Education</a>
+                <a href="#contact" class="hover:text-brand-600 dark:hover:text-brand-400 transition" data-i18n="nav_contact">Contact</a>
+            </nav>
+
+            <!-- Actions Controls -->
+            <div class="flex items-center gap-3">
+                <!-- Language Toggle -->
+                <button id="lang-toggle" title="Switch Language" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center gap-1.5 text-xs font-semibold">
+                    <i class="fa-solid fa-globe"></i>
+                    <span id="lang-label">AR</span>
+                </button>
+
+                <!-- Theme Toggle -->
+                <button id="theme-toggle" title="Toggle Theme" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                    <i class="fa-solid fa-moon dark:hidden"></i>
+                    <i class="fa-solid fa-sun hidden dark:block"></i>
+                </button>
+
+                <!-- Print / Save PDF Button -->
+                <button onclick="window.print()" class="hidden sm:inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold text-white bg-brand-600 hover:bg-brand-700 rounded-lg shadow-md transition interactive-btn">
+                    <i class="fa-solid fa-print"></i>
+                    <span data-i18n="btn_print">Print / PDF</span>
+                </button>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 text-slate-600 dark:text-slate-300">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-3 flex flex-col gap-3 font-medium text-sm">
+            <a href="#about" class="mobile-link py-1 text-slate-700 dark:text-slate-200" data-i18n="nav_about">About</a>
+            <a href="#skills" class="mobile-link py-1 text-slate-700 dark:text-slate-200" data-i18n="nav_skills">Skills</a>
+            <a href="#experience" class="mobile-link py-1 text-slate-700 dark:text-slate-200" data-i18n="nav_experience">Experience</a>
+            <a href="#projects" class="mobile-link py-1 text-slate-700 dark:text-slate-200" data-i18n="nav_projects">Projects</a>
+            <a href="#education" class="mobile-link py-1 text-slate-700 dark:text-slate-200" data-i18n="nav_education">Education</a>
+            <a href="#contact" class="mobile-link py-1 text-slate-700 dark:text-slate-200" data-i18n="nav_contact">Contact</a>
+            <button onclick="window.print()" class="w-full text-center py-2 bg-brand-600 text-white rounded-lg font-semibold mt-2">
+                <i class="fa-solid fa-print mr-1"></i> <span data-i18n="btn_print">Print / PDF</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full print-full-width space-y-12">
+
+        <!-- HERO / PROFILE CARD SECTION -->
+        <section id="about" class="glass-card rounded-2xl p-6 sm:p-8 lg:p-10 shadow-xl relative overflow-hidden">
+            <!-- Background Decorative Glow -->
+            <div class="absolute -top-24 -right-24 w-72 h-72 bg-brand-500/10 dark:bg-brand-500/20 rounded-full blur-3xl pointer-events-none animate-pulse-glow"></div>
+            <div class="absolute -bottom-24 -left-24 w-72 h-72 bg-accent-500/10 dark:bg-accent-500/20 rounded-full blur-3xl pointer-events-none animate-pulse-glow"></div>
+
+            <div class="flex flex-col lg:flex-row items-center lg:items-start gap-8 relative z-10">
+                <!-- Avatar Profile Container -->
+                <div class="relative group">
+                    <div class="w-36 h-36 sm:w-44 sm:h-44 rounded-2xl overflow-hidden ring-4 ring-brand-500/30 dark:ring-brand-400/40 shadow-2xl relative bg-slate-200 dark:bg-slate-800 flex items-center justify-center">
+                        <img id="profile-img" 
+                             src="https://raw.githubusercontent.com/sbadr2022-star/cv/main/%D8%B5%D9%88%D8%B1%D8%A9%20%D8%B4%D8%AE%D8%B5%D9%8A%D8%A9.jpg" 
+                             alt="Shadi Badr Profile Photo" 
+                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                             onerror="handleImageError(this)">
+                    </div>
+                    <!-- Status Indicator Badge -->
+                    <span class="absolute -bottom-2 -right-2 bg-emerald-500 text-white text-xs font-semibold px-2.5 py-1 rounded-full shadow-lg flex items-center gap-1.5 ring-2 ring-white dark:ring-slate-900">
+                        <span class="w-2 h-2 rounded-full bg-white animate-ping"></span>
+                        <span data-i18n="status_available">Available for Hire</span>
+                    </span>
+                </div>
+
+                <!-- Info Header Text -->
+                <div class="flex-1 text-center lg:text-left space-y-4">
+                    <div>
+                        <div class="inline-block px-3 py-1 bg-brand-100 dark:bg-brand-900/60 text-brand-700 dark:text-brand-300 font-semibold text-xs rounded-full uppercase tracking-wider mb-2" data-i18n="profile_role">
+                            Senior Software Engineer & Developer
+                        </div>
+                        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white" id="profile-name">
+                            Shadi Badr
+                        </h1>
+                        <p class="text-lg text-slate-600 dark:text-slate-300 mt-2 font-medium" data-i18n="profile_tagline">
+                            Passionate Full-Stack Developer specializing in modern web ecosystems, cloud solutions, and scalable software architecture.
+                        </p>
+                    </div>
+
+                    <!-- Quick Bio Summary -->
+                    <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed max-w-3xl" data-i18n="profile_bio">
+                        With over 6 years of experience building high-performance web applications, I bring expertise across JavaScript frameworks, backend systems, database modeling, and DevOps workflows. Dedicated to clean code, user-centric interfaces, and delivering impactful software solutions.
+                    </p>
+
+                    <!-- Contact Quick Info Badges -->
+                    <div class="flex flex-wrap justify-center lg:justify-start gap-3 pt-2 text-xs font-medium">
+                        <button onclick="copyToClipboard('shadi.badr.dev@example.com', 'Email Address')" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition">
+                            <i class="fa-solid fa-envelope text-brand-500"></i>
+                            <span>shadi.badr.dev@example.com</span>
+                            <i class="fa-regular fa-copy text-slate-400 text-[10px]"></i>
+                        </button>
+                        <a href="https://github.com/sbadr2022-star" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition">
+                            <i class="fa-brands fa-github text-slate-800 dark:text-slate-200"></i>
+                            <span>github.com/sbadr2022-star</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-60"></i>
+                        </a>
+                        <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300">
+                            <i class="fa-solid fa-location-dot text-rose-500"></i>
+                            <span data-i18n="location">Middle East / Remote</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Metric Stats Bar -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 pt-8 border-t border-slate-200/80 dark:border-slate-800/80 text-center">
+                <div class="p-3 rounded-xl bg-slate-50/50 dark:bg-slate-800/30">
+                    <div class="text-2xl sm:text-3xl font-extrabold text-brand-600 dark:text-brand-400">6+</div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1" data-i18n="stat_exp">Years Experience</div>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-50/50 dark:bg-slate-800/30">
+                    <div class="text-2xl sm:text-3xl font-extrabold text-brand-600 dark:text-brand-400">35+</div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1" data-i18n="stat_projects">Projects Delivered</div>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-50/50 dark:bg-slate-800/30">
+                    <div class="text-2xl sm:text-3xl font-extrabold text-brand-600 dark:text-brand-400">12+</div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1" data-i18n="stat_tech">Tech Stack Tools</div>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-50/50 dark:bg-slate-800/30">
+                    <div class="text-2xl sm:text-3xl font-extrabold text-brand-600 dark:text-brand-400">100%</div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1" data-i18n="stat_satisfaction">Client Satisfaction</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SKILLS MATRIX SECTION -->
+        <section id="skills" class="space-y-6 scroll-mt-20">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                        <i class="fa-solid fa-code text-brand-500"></i>
+                        <span data-i18n="sec_skills">Technical Skills & Expertise</span>
+                    </h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400" data-i18n="sub_skills">Categorized proficiency levels in engineering technologies</p>
+                </div>
+
+                <!-- Skill Filter Tabs -->
+                <div class="flex flex-wrap gap-2 no-print" id="skills-filter">
+                    <button data-filter="all" class="skill-tab-btn active px-3 py-1.5 text-xs font-semibold rounded-lg bg-brand-600 text-white shadow-sm transition">All</button>
+                    <button data-filter="frontend" class="skill-tab-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 transition">Frontend</button>
+                    <button data-filter="backend" class="skill-tab-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 transition">Backend</button>
+                    <button data-filter="tools" class="skill-tab-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 transition">Tools & Cloud</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="skills-container">
+                <!-- JavaScript / TypeScript -->
+                <div class="skill-card glass-card p-4 rounded-xl space-y-2" data-category="frontend">
+                    <div class="flex justify-between items-center text-sm font-semibold">
+                        <span class="flex items-center gap-2">
+                            <i class="fa-brands fa-js text-yellow-500 text-lg"></i> JavaScript & TypeScript
+                        </span>
+                        <span class="text-brand-600 dark:text-brand-400 font-bold">92%</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div class="h-full bg-gradient-to-r from-brand-500 to-accent-500 rounded-full transition-all duration-1000 w-[92%]"></div>
+                    </div>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">ES6+, React, Node.js, Async Patterns, Type System</p>
+                </div>
+
+                <!-- React & Next.js -->
+                <div class="skill-card glass-card p-4 rounded-xl space-y-2" data-category="frontend">
+                    <div class="flex justify-between items-center text-sm font-semibold">
+                        <span class="flex items-center gap-2">
+                            <i class="fa-brands fa-react text-cyan-400 text-lg"></i> React.js / Next.js
+                        </span>
+                        <span class="text-brand-600 dark:text-brand-400 font-bold">90%</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div class="h-full bg-gradient-to-r from-brand-500 to-accent-500 rounded-full transition-all duration-1000 w-[90%]"></div>
+                    </div>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Redux Toolkit, Hooks, SSR, Tailwind CSS, Component Architecture</p>
+                </div>
+
+                <!-- Node.js & Express -->
+                <div class="skill-card glass-card p-4 rounded-xl space-y-2" data-category="backend">
+                    <div class="flex justify-between items-center text-sm font-semibold">
+                        <span class="flex items-center gap-2">
+                            <i class="fa-brands fa-node-js text-emerald-500 text-lg"></i> Node.js & Express
+                        </span>
+                        <span class="text-brand-600 dark:text-brand-400 font-bold">85%</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div class="h-full bg-gradient-to-r from-brand-500 to-accent-500 rounded-full transition-all duration-1000 w-[85%]"></div>
+                    </div>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">RESTful APIs, Microservices, Authentication (JWT / OAuth), Middleware</p>
+                </div>
+
+                <!-- Python & Django -->
+                <div class="skill-card glass-card p-4 rounded-xl space-y-2" data-category="backend">
+                    <div class="flex justify-between items-center text-sm font-semibold">
+                        <span class="flex items-center gap-2">
+                            <i class="fa-brands fa-python text-blue-500 text-lg"></i> Python & Django / Flask
+                        </span>
+                        <span class="text-brand-600 dark:text-brand-400 font-bold">80%</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div class="h-full bg-gradient-to-r from-brand-500 to-accent-500 rounded-full transition-all duration-1000 w-[80%]"></div>
+                    </div>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Data Processing, Scripting, REST Framework, Web Scraping</p>
+                </div>
+
+                <!-- Databases & ORMs -->
+                <div class="skill-card glass-card p-4 rounded-xl space-y-2" data-category="backend">
+                    <div class="flex justify-between items-center text-sm font-semibold">
+                        <span class="flex items-center gap-2">
+                            <i class="fa-solid fa-database text-indigo-400 text-lg"></i> PostgreSQL & MongoDB
+                        </span>
+                        <span class="text-brand-600 dark:text-brand-400 font-bold">88%</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div class="h-full bg-gradient-to-r from-brand-500 to-accent-500 rounded-full transition-all duration-1000 w-[88%]"></div>
+                    </div>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Schema Design, Query Optimization, Prisma, Mongoose, Redis Caching</p>
+                </div>
+
+                <!-- Git, Docker & DevOps -->
+                <div class="skill-card glass-card p-4 rounded-xl space-y-2" data-category="tools">
+                    <div class="flex justify-between items-center text-sm font-semibold">
+                        <span class="flex items-center gap-2">
+                            <i class="fa-brands fa-docker text-sky-500 text-lg"></i> Git, Docker & Cloud
+                        </span>
+                        <span class="text-brand-600 dark:text-brand-400 font-bold">82%</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div class="h-full bg-gradient-to-r from-brand-500 to-accent-500 rounded-full transition-all duration-1000 w-[82%]"></div>
+                    </div>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">GitHub Actions CI/CD, Docker Containerization, AWS (S3, EC2), Vercel</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- WORK EXPERIENCE TIMELINE SECTION -->
+        <section id="experience" class="space-y-6 scroll-mt-20">
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-briefcase text-brand-500"></i>
+                    <span data-i18n="sec_experience">Work Experience</span>
+                </h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400" data-i18n="sub_experience">Professional career path and key accomplishments</p>
+            </div>
+
+            <div class="relative border-l-2 border-slate-200 dark:border-slate-800 ml-4 sm:ml-6 pl-6 sm:pl-8 space-y-8">
+
+                <!-- Job 1 -->
+                <div class="relative group">
+                    <!-- Dot Icon -->
+                    <div class="absolute -left-[31px] sm:-left-[39px] top-1.5 w-6 h-6 rounded-full bg-brand-600 text-white flex items-center justify-center text-xs shadow-md group-hover:scale-125 transition-transform">
+                        <i class="fa-solid fa-check text-[10px]"></i>
+                    </div>
+
+                    <div class="glass-card p-5 sm:p-6 rounded-2xl space-y-3 transition hover:shadow-lg">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-900 dark:text-white">Senior Full-Stack Developer</h3>
+                                <p class="text-sm text-brand-600 dark:text-brand-400 font-semibold">Tech Matrix Solutions</p>
+                            </div>
+                            <span class="inline-block px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-semibold">
+                                2022 — Present
+                            </span>
+                        </div>
+                        <ul class="list-disc list-inside text-sm text-slate-600 dark:text-slate-300 space-y-1.5">
+                            <li>Architected and deployed responsive web apps using React, Next.js, and Node.js REST services.</li>
+                            <li>Improved page load efficiency by 35% through dynamic code-splitting and asset optimization.</li>
+                            <li>Mentored junior developers and instituted automated CI/CD unit testing pipelines.</li>
+                        </ul>
+                        <div class="flex flex-wrap gap-1.5 pt-2">
+                            <span class="px-2 py-0.5 rounded bg-brand-50 dark:bg-brand-950/50 text-brand-700 dark:text-brand-300 text-[11px] font-medium">React.js</span>
+                            <span class="px-2 py-0.5 rounded bg-brand-50 dark:bg-brand-950/50 text-brand-700 dark:text-brand-300 text-[11px] font-medium">Node.js</span>
+                            <span class="px-2 py-0.5 rounded bg-brand-50 dark:bg-brand-950/50 text-brand-700 dark:text-brand-300 text-[11px] font-medium">TypeScript</span>
+                            <span class="px-2 py-0.5 rounded bg-brand-50 dark:bg-brand-950/50 text-brand-700 dark:text-brand-300 text-[11px] font-medium">Tailwind CSS</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Job 2 -->
+                <div class="relative group">
+                    <div class="absolute -left-[31px] sm:-left-[39px] top-1.5 w-6 h-6 rounded-full bg-slate-400 dark:bg-slate-700 text-white flex items-center justify-center text-xs shadow-md group-hover:scale-125 transition-transform">
+                        <i class="fa-solid fa-code text-[10px]"></i>
+                    </div>
+
+                    <div class="glass-card p-5 sm:p-6 rounded-2xl space-y-3 transition hover:shadow-lg">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-900 dark:text-white">Web Applications Developer</h3>
+                                <p class="text-sm text-brand-600 dark:text-brand-400 font-semibold">Global Digital Media</p>
+                            </div>
+                            <span class="inline-block px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-semibold">
+                                2020 — 2022
+                            </span>
+                        </div>
+                        <ul class="list-disc list-inside text-sm text-slate-600 dark:text-slate-300 space-y-1.5">
+                            <li>Developed cross-platform responsive portals with interactive data dashboards and chart visuals.</li>
+                            <li>Integrated secure third-party payment processing gateways and user identity workflows.</li>
+                            <li>Collaborated with UI/UX designers to translate Figma design systems into pixel-perfect web interfaces.</li>
+                        </ul>
+                        <div class="flex flex-wrap gap-1.5 pt-2">
+                            <span class="px-2 py-0.5 rounded bg-brand-50 dark:bg-brand-950/50 text-brand-700 dark:text-brand-300 text-[11px] font-medium">JavaScript</span>
+                            <span class="px-2 py-0.5 rounded bg-brand-50 dark:bg-brand-950/50 text-brand-700 dark:text-brand-300 text-[11px] font-medium">Express.js</span>
+                            <span class="px-2 py-0.5 rounded bg-brand-50 dark:bg-brand-950/50 text-brand-700 dark:text-brand-300 text-[11px] font-medium">PostgreSQL</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Job 3 -->
+                <div class="relative group">
+                    <div class="absolute -left-[31px] sm:-left-[39px] top-1.5 w-6 h-6 rounded-full bg-slate-400 dark:bg-slate-700 text-white flex items-center justify-center text-xs shadow-md group-hover:scale-125 transition-transform">
+                        <i class="fa-solid fa-laptop-code text-[10px]"></i>
+                    </div>
+
+                    <div class="glass-card p-5 sm:p-6 rounded-2xl space-y-3 transition hover:shadow-lg">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-900 dark:text-white">Junior Software Engineer</h3>
+                                <p class="text-sm text-brand-600 dark:text-brand-400 font-semibold">Apex Innovations</p>
+                            </div>
+                            <span class="inline-block px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-semibold">
+                                2018 — 2020
+                            </span>
+                        </div>
+                        <ul class="list-disc list-inside text-sm text-slate-600 dark:text-slate-300 space-y-1.5">
+                            <li>Maintained legacy web projects while writing new modular client-side components.</li>
+                            <li>Created custom REST APIs in Python for automated report generation and notifications.</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- PROJECTS SHOWCASE SECTION -->
+        <section id="projects" class="space-y-6 scroll-mt-20">
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-folder-open text-brand-500"></i>
+                    <span data-i18n="sec_projects">Featured Projects</span>
+                </h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400" data-i18n="sub_projects">Highlighting key repositories and live applications</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- Project Card 1 -->
+                <div class="glass-card rounded-2xl overflow-hidden group hover:-translate-y-1 transition duration-300 shadow-md flex flex-col justify-between">
+                    <div>
+                        <div class="h-44 bg-slate-800 relative overflow-hidden flex items-center justify-center text-slate-400">
+                            <i class="fa-solid fa-layer-group text-5xl group-hover:scale-110 transition duration-500 text-brand-400"></i>
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent"></div>
+                            <span class="absolute bottom-3 left-4 text-xs font-semibold bg-brand-500 text-white px-2.5 py-0.5 rounded-full">Full Stack</span>
+                        </div>
+                        <div class="p-5 space-y-2">
+                            <h3 class="font-bold text-lg text-slate-900 dark:text-white group-hover:text-brand-500 transition">GitHub Interactive CV</h3>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                                Standalone single-page interactive curriculum vitae featuring real-time themes, responsive filters, and export functionality.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="p-5 pt-0 space-y-3">
+                        <div class="flex flex-wrap gap-1 text-[11px]">
+                            <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">HTML5</span>
+                            <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Tailwind</span>
+                            <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">JavaScript</span>
+                        </div>
+                        <div class="flex items-center justify-between pt-2 border-t border-slate-200/60 dark:border-slate-800/60">
+                            <a href="https://github.com/sbadr2022-star/cv" target="_blank" class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1">
+                                <i class="fa-brands fa-github"></i> GitHub Repo
+                            </a>
+                            <button onclick="openProjectModal('GitHub Interactive CV', 'A standalone interactive resume application hosted directly on GitHub Pages with dark mode, multi-language support, and PDF print formatting.')" class="text-xs font-medium text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">
+                                Details <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Card 2 -->
+                <div class="glass-card rounded-2xl overflow-hidden group hover:-translate-y-1 transition duration-300 shadow-md flex flex-col justify-between">
+                    <div>
+                        <div class="h-44 bg-slate-800 relative overflow-hidden flex items-center justify-center text-slate-400">
+                            <i class="fa-solid fa-chart-line text-5xl group-hover:scale-110 transition duration-500 text-accent-400"></i>
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent"></div>
+                            <span class="absolute bottom-3 left-4 text-xs font-semibold bg-accent-600 text-white px-2.5 py-0.5 rounded-full">Analytics</span>
+                        </div>
+                        <div class="p-5 space-y-2">
+                            <h3 class="font-bold text-lg text-slate-900 dark:text-white group-hover:text-accent-500 transition">SaaS Analytics Dashboard</h3>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                                Real-time telemetry monitoring platform featuring metrics visualization, JWT authentication, and automated CSV reports.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="p-5 pt-0 space-y-3">
+                        <div class="flex flex-wrap gap-1 text-[11px]">
+                            <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">React</span>
+                            <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Node.js</span>
+                            <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">PostgreSQL</span>
+                        </div>
+                        <div class="flex items-center justify-between pt-2 border-t border-slate-200/60 dark:border-slate-800/60">
+                            <a href="https://github.com/sbadr2022-star" target="_blank" class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1">
+                                <i class="fa-brands fa-github"></i> GitHub Repo
+                            </a>
+                            <button onclick="openProjectModal('SaaS Analytics Dashboard', 'A complete enterprise dashboard solution designed for tracking system performance metrics and user behavior with chart integrations.')" class="text-xs font-medium text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">
+                                Details <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Card 3 -->
+                <div class="glass-card rounded-2xl overflow-hidden group hover:-translate-y-1 transition duration-300 shadow-md flex flex-col justify-between">
+                    <div>
+                        <div class="h-44 bg-slate-800 relative overflow-hidden flex items-center justify-center text-slate-400">
+                            <i class="fa-solid fa-cart-shopping text-5xl group-hover:scale-110 transition duration-500 text-emerald-400"></i>
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent"></div>
+                            <span class="absolute bottom-3 left-4 text-xs font-semibold bg-emerald-600 text-white px-2.5 py-0.5 rounded-full">E-Commerce</span>
+                        </div>
+                        <div class="p-5 space-y-2">
+                            <h3 class="font-bold text-lg text-slate-900 dark:text-white group-hover:text-emerald-500 transition">E-Commerce Storefront</h3>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                                Modern digital shop application with live product search, client shopping cart state, and Stripe checkout integration.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="p-5 pt-0 space-y-3">
+                        <div class="flex flex-wrap gap-1 text-[11px]">
+                            <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Next.js</span>
+                            <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Stripe</span>
+                            <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">MongoDB</span>
+                        </div>
+                        <div class="flex items-center justify-between pt-2 border-t border-slate-200/60 dark:border-slate-800/60">
+                            <a href="https://github.com/sbadr2022-star" target="_blank" class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1">
+                                <i class="fa-brands fa-github"></i> GitHub Repo
+                            </a>
+                            <button onclick="openProjectModal('E-Commerce Storefront', 'An end-to-end full stack web shop app built with performant Server-Side Rendering and fast search index lookup.')" class="text-xs font-medium text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">
+                                Details <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- EDUCATION & CERTIFICATIONS SECTION -->
+        <section id="education" class="space-y-6 scroll-mt-20">
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-graduation-cap text-brand-500"></i>
+                    <span data-i18n="sec_education">Education & Credentials</span>
+                </h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400" data-i18n="sub_education">Academic degrees and verified certifications</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <!-- Education Card -->
+                <div class="glass-card p-6 rounded-2xl space-y-4">
+                    <div class="flex items-start gap-4">
+                        <div class="p-3 bg-brand-100 dark:bg-brand-900/50 text-brand-600 dark:text-brand-400 rounded-xl">
+                            <i class="fa-solid fa-university text-2xl"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider">Bachelor Degree</span>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white">B.Sc. Computer Science</h3>
+                            <p class="text-sm text-slate-600 dark:text-slate-300">Faculty of Computer Science & Information Systems</p>
+                            <p class="text-xs text-slate-400 mt-1">Graduated with Honors • 2014 — 2018</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed border-t border-slate-200/60 dark:border-slate-800/60 pt-3">
+                        Specialized in Software Engineering, Data Structures, Algorithms, System Architecture, and Object-Oriented Programming principles.
+                    </p>
+                </div>
+
+                <!-- Certifications Card -->
+                <div class="glass-card p-6 rounded-2xl space-y-4">
+                    <div class="flex items-start gap-4">
+                        <div class="p-3 bg-accent-100 dark:bg-accent-950/50 text-accent-600 dark:text-accent-400 rounded-xl">
+                            <i class="fa-solid fa-award text-2xl"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-accent-600 dark:text-accent-400 uppercase tracking-wider">Certifications</span>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white">Professional Licenses</h3>
+                            <p class="text-sm text-slate-600 dark:text-slate-300">Verified Technical Credentials</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2.5 border-t border-slate-200/60 dark:border-slate-800/60 pt-3 text-xs">
+                        <div class="flex items-center justify-between p-2 rounded-lg bg-slate-50 dark:bg-slate-800/40">
+                            <span class="font-medium text-slate-800 dark:text-slate-200"><i class="fa-solid fa-certificate text-brand-500 mr-2"></i>AWS Certified Developer - Associate</span>
+                            <span class="text-slate-400 text-[11px]">2023</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2 rounded-lg bg-slate-50 dark:bg-slate-800/40">
+                            <span class="font-medium text-slate-800 dark:text-slate-200"><i class="fa-solid fa-certificate text-brand-500 mr-2"></i>Meta Front-End Developer Professional</span>
+                            <span class="text-slate-400 text-[11px]">2022</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2 rounded-lg bg-slate-50 dark:bg-slate-800/40">
+                            <span class="font-medium text-slate-800 dark:text-slate-200"><i class="fa-solid fa-certificate text-brand-500 mr-2"></i>MongoDB Node.js Developer</span>
+                            <span class="text-slate-400 text-[11px]">2021</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section id="contact" class="glass-card p-6 sm:p-8 lg:p-10 rounded-2xl shadow-xl scroll-mt-20 no-print space-y-6">
+            <div class="max-w-2xl mx-auto text-center space-y-2">
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white" data-i18n="sec_contact">Get In Touch</h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400" data-i18n="sub_contact">Have a project, job opportunity, or question? Send a message directly.</p>
+            </div>
+
+            <form id="contact-form" onsubmit="handleFormSubmit(event)" class="max-w-xl mx-auto space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_name">Your Name</label>
+                        <input type="text" required placeholder="John Doe" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_email">Email Address</label>
+                        <input type="email" required placeholder="john@example.com" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none transition">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_subject">Subject</label>
+                    <input type="text" required placeholder="Project Inquiry / Job Offer" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1" data-i18n="lbl_message">Message</label>
+                    <textarea rows="4" required placeholder="Write your message here..." class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none transition resize-none"></textarea>
+                </div>
+
+                <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg transition duration-200 flex items-center justify-center gap-2 text-sm interactive-btn">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span data-i18n="btn_send">Send Message</span>
+                </button>
+            </form>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-12 py-6 border-t border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400 no-print">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p>© <span id="current-year"></span> Shadi Badr (sbadr2022-star). All Rights Reserved.</p>
+            <div class="flex items-center gap-4 text-base">
+                <a href="https://github.com/sbadr2022-star" target="_blank" class="hover:text-brand-500 transition"><i class="fa-brands fa-github"></i></a>
+                <a href="mailto:shadi.badr.dev@example.com" class="hover:text-brand-500 transition"><i class="fa-solid fa-envelope"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- PROJECT DETAILS MODAL -->
+    <div id="project-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-950/60 backdrop-blur-sm p-4 no-print">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl relative animate-fade-in">
+            <button onclick="closeProjectModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h3 id="modal-title" class="text-xl font-bold text-slate-900 dark:text-white"></h3>
+            <p id="modal-desc" class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed"></p>
+            <div class="pt-2 flex justify-end">
+                <button onclick="closeProjectModal()" class="px-4 py-2 bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-semibold rounded-lg hover:bg-slate-300 dark:hover:bg-slate-700 transition">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION BOX -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none no-print">
+        <div class="bg-slate-900 text-white dark:bg-white dark:text-slate-900 px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 text-xs font-medium">
+            <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 dark:text-emerald-600 text-base"></i>
+            <span id="toast-message">Action successful!</span>
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            en: {
+                nav_about: "About",
+                nav_skills: "Skills",
+                nav_experience: "Experience",
+                nav_projects: "Projects",
+                nav_education: "Education",
+                nav_contact: "Contact",
+                btn_print: "Print / PDF",
+                status_available: "Available for Hire",
+                profile_role: "Senior Software Engineer & Developer",
+                profile_tagline: "Passionate Full-Stack Developer specializing in modern web ecosystems, cloud solutions, and scalable software architecture.",
+                profile_bio: "With over 6 years of experience building high-performance web applications, I bring expertise across JavaScript frameworks, backend systems, database modeling, and DevOps workflows. Dedicated to clean code, user-centric interfaces, and delivering impactful software solutions.",
+                location: "Middle East / Remote",
+                stat_exp: "Years Experience",
+                stat_projects: "Projects Delivered",
+                stat_tech: "Tech Stack Tools",
+                stat_satisfaction: "Client Satisfaction",
+                sec_skills: "Technical Skills & Expertise",
+                sub_skills: "Categorized proficiency levels in engineering technologies",
+                sec_experience: "Work Experience",
+                sub_experience: "Professional career path and key accomplishments",
+                sec_projects: "Featured Projects",
+                sub_projects: "Highlighting key repositories and live applications",
+                sec_education: "Education & Credentials",
+                sub_education: "Academic degrees and verified certifications",
+                sec_contact: "Get In Touch",
+                sub_contact: "Have a project, job opportunity, or question? Send a message directly.",
+                lbl_name: "Your Name",
+                lbl_email: "Email Address",
+                lbl_subject: "Subject",
+                lbl_message: "Message",
+                btn_send: "Send Message"
+            },
+            ar: {
+                nav_about: "نبذة عني",
+                nav_skills: "المهارات",
+                nav_experience: "الخبرات",
+                nav_projects: "المشاريع",
+                nav_education: "التعليم",
+                nav_contact: "تواصل معي",
+                btn_print: "طباعة / PDF",
+                status_available: "متاح للعمل",
+                profile_role: "مطور برمجيات متكامل وخبير ويب",
+                profile_tagline: "شغوف بتطوير تطبيقات الويب الحديثة، الحلول السحابية، وبناء الأنظمة البرمجية القابلة للتوسع.",
+                profile_bio: "مع أكثر من 6 سنوات من الخبرة في بناء تطبيقات الويب عالية الأداء، أمتلك خبرة شاملة في أطر عمل جافاسكربت، الأنظمة الخلفية، تصميم قواعد البيانات، وأدوات التطوير الحديثة.",
+                location: "الشرق الأوسط / عمل عن بُعد",
+                stat_exp: "سنوات خبرة",
+                stat_projects: "مشروع منجز",
+                stat_tech: "تقنية مستخدمة",
+                stat_satisfaction: "رضا العملاء",
+                sec_skills: "المهارات والخبرات التقنية",
+                sub_skills: "مستويات الإتقان في مختلف المهارات البرمجية",
+                sec_experience: "الخبرات المهنية",
+                sub_experience: "المسار المهني وأبرز الإنجازات",
+                sec_projects: "أبرز المشاريع",
+                sub_projects: "معرض للمشاريع والتطبيقات المميزة",
+                sec_education: "التعليم والشهادات",
+                sub_education: "المؤهلات الأكاديمية والشهادات المعتمدة",
+                sec_contact: "تواصل معي",
+                sub_contact: "هل لديك مشروع أو فرصة عمل؟ أرسل رسالة مباشرة.",
+                lbl_name: "الاسم الكامل",
+                lbl_email: "البريد الإلكتروني",
+                lbl_subject: "الموضوع",
+                lbl_message: "الرسالة",
+                btn_send: "إرسال الرسالة"
+            }
+        };
+
+        let currentLang = 'en';
+
+        window.addEventListener('DOMContentLoaded', () => {
+            // Set dynamic year
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+
+            // Theme setup
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+
+            themeToggleBtn.addEventListener('click', () => {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.theme = 'light';
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.theme = 'dark';
+                }
+            });
+
+            // Language setup
+            const langToggleBtn = document.getElementById('lang-toggle');
+            langToggleBtn.addEventListener('click', toggleLanguage);
+
+            // Mobile menu setup
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Close mobile menu on link click
+            document.querySelectorAll('.mobile-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+
+            // Skills filter setup
+            setupSkillsFilter();
+        });
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'ar' : 'en';
+            const langLabel = document.getElementById('lang-label');
+            langLabel.textContent = currentLang === 'en' ? 'AR' : 'EN';
+
+            if (currentLang === 'ar') {
+                document.documentElement.setAttribute('dir', 'rtl');
+                document.documentElement.classList.add('font-arabic');
+            } else {
+                document.documentElement.setAttribute('dir', 'ltr');
+                document.documentElement.classList.remove('font-arabic');
+            }
+
+            // Translate DOM elements with data-i18n attribute
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang][key]) {
+                    el.textContent = translations[currentLang][key];
+                }
+            });
+        }
+
+        function setupSkillsFilter() {
+            const filterButtons = document.querySelectorAll('#skills-filter button');
+            const skillCards = document.querySelectorAll('#skills-container .skill-card');
+
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterButtons.forEach(b => {
+                        b.classList.remove('bg-brand-600', 'text-white', 'active');
+                        b.classList.add('bg-slate-200', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+                    });
+                    btn.classList.remove('bg-slate-200', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+                    btn.classList.add('bg-brand-600', 'text-white', 'active');
+
+                    const category = btn.getAttribute('data-filter');
+
+                    skillCards.forEach(card => {
+                        if (category === 'all' || card.getAttribute('data-category') === category) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        }
+
+        function handleImageError(img) {
+            // Fallback image in case the GitHub repo image URL is unreachable
+            img.onerror = null;
+            img.src = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80";
+        }
+
+        function copyToClipboard(text, label) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast(`${label} copied to clipboard!`);
+            } catch (err) {
+                showToast(`Failed to copy ${label}`);
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            toastMsg.textContent = msg;
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        function openProjectModal(title, description) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-desc').textContent = description;
+            document.getElementById('project-modal').classList.remove('hidden');
+        }
+
+        function closeProjectModal() {
+            document.getElementById('project-modal').classList.add('hidden');
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            showToast("Thank you! Your message has been sent successfully.");
+            document.getElementById('contact-form').reset();
+        }
+    </script>
+</body>
+</html>
